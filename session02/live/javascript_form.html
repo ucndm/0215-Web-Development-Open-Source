@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>JavaScript - Form</title>
+		<meta charset="utf-8"/>
+		<style type="text/css">
+			#alert {
+				visibility: hidden;
+			}
+		</style>
+		<script type="text/javascript">
+
+			function submitform(e){
+				e.preventDefault();
+				console.debug(e.target.name.value);
+				if(e.target.name.value != ''){
+					e.target.submit();
+				}else{
+					document.getElementById('alert').style.visibility = 'visible';
+				}
+			}
+
+			window.addEventListener('load', function(){
+				document.forms.namevalidate.addEventListener('submit', submitform, false);
+			}, false);
+		</script>
+	</head>
+	<body>
+		<h1>JavaScript - Forms</h1>
+		<div id="alert">Please enter your name</div>
+		<form name="namevalidate">
+			<input type="text" name="name" />
+			<input type="submit" />
+		</form>
+	</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>JavaScript - Events</title>
+		<meta charset="utf-8"/>
+		<style type="text/css">
+			h1 {
+				background-color: orange;
+				border: solid transparent 2px;
+			}
+
+			h1.focus {
+				background-color: blue;
+				border: solid black 2px;
+			}
+		</style>
+		<script type="text/javascript">
+			var header;
+
+			function load(){
+				header = document.getElementById('header');
+				console.debug(header);
+				//header.addEventListener('click', changetored, false);
+				//header.addEventListener('click', function(e){changeColor('blue', e.target)}, false);
+				header.addEventListener('click', function(e){
+					if(e.target.className == ''){
+						e.target.className = 'focus';
+					}else{
+						e.target.className = '';
+					}
+				}, false);
+			}
+
+			function changetored(){
+				header.style.backgroundColor = 'red';
+			}
+
+			function changeColor(color, elm){
+				elm.style.backgroundColor = color;
+			}
+
+			window.addEventListener('load', load, false);
+		</script>
+	</head>
+	<body>
+		<h1 id="header">JavaScript - Events</h1>
+	</body>
+</html>
