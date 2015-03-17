@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-F
+#RewriteRule ^([a-zA-Z0-9\/\.]+)html$ index.php?path=$1&%{QUERY_STRING}
+RewriteRule ^([a-zA-Z0-9\/]+)?$ usingClasses.php?path=$1&%{QUERY_STRING}
