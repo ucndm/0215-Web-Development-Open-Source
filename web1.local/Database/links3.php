@@ -20,7 +20,7 @@
 					$insert->bindParam(":title", $_POST['title'], PDO::PARAM_STR, 256);
 
 					if($insert->execute()){
-						$message->alert = "Link created! $conn->lastInsertId()";
+						$message->alert = "Link created! ".$conn->lastInsertId();
 					}
 				}else{
 					$message->alert = 'You need both title and url';
