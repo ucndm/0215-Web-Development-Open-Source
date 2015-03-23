@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Hans Christian Andersen</title>
+		<style type="text/css">
+			img.img_right {
+				float: right;
+				margin-left: .5em;
+			}
+		</style>
+		<script type="text/javascript">
+			var mainelement;
+
+			var requesthandler = function(e){
+				var xhr = e.target;
+				if(xhr.readyState == 4){
+					var content = xhr.response;
+					mainelement.innerHTML = content;
+				}
+			};
+
+			var loadPage = function(filename){
+				var xhr = new XMLHttpRequest();
+				xhr.addEventListener('readystatechange', requesthandler, false);
+				xhr.open('GET', filename);
+				xhr.setRequestHeader('Cache-Control', 'no-cache');
+				xhr.setRequestHeader('Pragma', 'no-cache');
+				xhr.send();
+			};
+
+			var clicklink = function(e){
+				e.preventDefault();
+				var filename = e.originalTarget.attributes['href'].value;
+				loadPage(filename);
+			};
+
+			window.addEventListener('load', function(){
+				mainelement = document.querySelector('body > main');
+				var mainnav = document.querySelector('ul#mainnav');
+				mainnav.addEventListener('click', clicklink, false);
+				loadPage('page1.html');
+			}, false);
+		</script>
+	</head>
+	<body>
+		<header>
+			<h1>Hans Christian Andersen</h1>
+		</header>
+		<nav>
+			<ul id="mainnav">
+				<li><a href="page1.html">Home</a></li>
+				<li><a href="page2.html">Early life</a></li>
+				<li><a href="page3.html">Fairy tales and poetry</a></li>
+			</ul>
+		</nav>
+		<main></main>
+		<footer>
+			<div>Text copied from <a href="http://en.wikipedia.org/wiki/Hans_Christian_Andersen">en.wikipedia.org/wiki/Hans_Christian_Andersen</a>.</div>
+		</footer>
+	</body>
+</html>
