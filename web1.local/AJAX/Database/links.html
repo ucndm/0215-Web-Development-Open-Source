@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Links using AJAX</title>
+		<meta charset="utf-8"/>
+		<style type="text/css">
+			#links button {
+				border: none;
+				font-size: .7em;
+				margin: 0 0 0 .5em;
+			}
+		</style>
+		<script type="text/javascript">
+			var linksElm, linksArr = [];
+
+			var Link = function(url, title){
+				this.url = url;
+				this.title = title;
+			};
+
+			var linkObjToLinksElm = function(link){
+				var a = document.createElement('a');
+				a.href = link.url;
+				a.target = '_blank';
+				a.setAttribute('data-id', link.id);
+				a.innerHTML = link.title;
+				var editBtn = document.createElement('button');
+				editBtn.setAttribute('data-action', 'edit');
+				editBtn.innerHTML = 'Edit';
+				var deleteBtn = document.createElement('button');
+				deleteBtn.setAttribute('data-action', 'delete');
+				deleteBtn.innerHTML = 'Delete';
+				var li = document.createElement('li');
+				li.setAttribute('data-id', link.id);
+				li.appendChild(a);
+				li.appendChild(editBtn);
+				li.appendChild(deleteBtn);
+				linksElm.appendChild(li);
+			};
+
+			var showLinks = function(e){
+				var xhr = e.target;
+				if(xhr.readyState == 4 && xhr.status == 200){
+					var xhrObj = JSON.parse(xhr.response);
+					//override the linksArr;
+					linksArr = xhrObj.links;
+					//empty the list of links
+					linksElm.innerHTML = '';
+					linksArr.forEach(linkObjToLinksElm);
+				}
+			};
+
+			var showNewLink = function(e){
+				var xhr = e.target;
+				if(xhr.readyState == 4 && xhr.status == 200){
+					var xhrObj = JSON.parse(xhr.response);
+					var link = xhrObj.link;
+					linkObjToLinksElm(link);
+					linksArr.push(link);
+				}
+			};
+
+			var showUpdateLink = function(e){
+				var xhr = e.target;
+				if(xhr.readyState == 4 && xhr.status == 200){
+					var xhrObj = JSON.parse(xhr.response);
+					var updatelink = xhrObj.link;
+					//update linksArr
+					linksArr.some(function(link){
+						if(link.id == updatelink.id){
+							link.title = updatelink.title;
+							link.url = updatelink.url;
+							return true;
+						}
+					});
+					//update linksElm
+					var linkElm = document.querySelector('#links li[data-id = "'+updatelink.id+'"] a');
+
+					linkElm.innerHTML = updatelink.title;
+					linkElm.href = updatelink.url;
+				}
+			};
+
+			var showDeleteLink = function(e){
+				var xhr = e.target;
+				if(xhr.readyState == 4 && xhr.status == 200){
+					var xhrObj = JSON.parse(xhr.response);
+					//delete link from linksArr
+					linksArr.some(function(link, index){
+						if(link.id == xhrObj.id){
+							linksArr.splice(index, 1);
+							return true;
+						}
+					});
+					//update linksElm
+					var linkElm = document.querySelector('#links li[data-id = "'+xhrObj.id+'"]');
+					linkElm.outerHTML = '';
+				}
+			};
+
+			var request = function(method, url, callback, data){
+				var xhr = new XMLHttpRequest();
+				xhr.addEventListener('readystatechange', callback, false);
+				xhr.open(method, url);
+				xhr.setRequestHeader('Cache-Control', 'no-cache');
+				xhr.setRequestHeader('Pragma', 'no-cache');
+				xhr.send(JSON.stringify(data));
+			};
+
+			var submitnewlink = function(e){
+				e.preventDefault();
+				var form = e.target;
+				if(form.url.value != '' && form.title.value != ''){
+					var link = new Link(form.url.value, form.title.value);
+					request('POST', 'links_ws.php', showNewLink, link);
+					form.reset();
+				}
+			};
+
+			var submitupdatelink = function(e){
+				e.preventDefault();
+				var form = e.target;
+				if(form.url.value != '' && form.title.value != '' && form.id.value != ''){
+					var link = new Link(form.url.value, e.target.title.value);
+					request('PUT', 'links_ws.php?id='+form.id.value, showUpdateLink, link);
+					form.reset();
+				}
+			};
+			
+			var clickLinkElm = function(e){
+				var elm = e.target;
+				switch(elm.attributes['data-action'].value){
+					case 'edit':
+						var id = elm.parentNode.attributes['data-id'].value;
+						linksArr.some(function(link){
+							if(id == link.id){
+								document.forms.updatelink.title.value = link.title;
+								document.forms.updatelink.url.value = link.url;
+								document.forms.updatelink.id.value = id;
+								return true;
+							}
+						});
+						break;
+					case 'delete':
+						var id = elm.parentNode.attributes['data-id'].value;
+						if(confirm('Delete the link?')){
+							request('DELETE', 'links_ws.php?id='+id, showDeleteLink);
+						}
+						break;
+				}
+			};
+
+			window.addEventListener('load', function(){
+				linksElm = document.getElementById('links');
+				//get all links
+				request('GET', 'links_ws.php', showLinks);
+				//add eventlisteners on forms
+				document.forms.newlink.addEventListener('submit', submitnewlink, false);
+				document.forms.updatelink.addEventListener('submit', submitupdatelink, false);
+
+				linksElm.addEventListener('click', clickLinkElm, false);
+			}, false);
+		</script>
+	</head>
+	<body>
+		<h1>Links using AJAX</h1>
+		<ul id="links">
+		</ul>
+		<form name="newlink">
+			<label>URL: <input type="url" name="url" /></label>
+			<label>Title: <input type="text" name="title" /></label>
+			<input type="submit" value="Create"/>
+		</form>
+		<form name="updatelink">
+			<label>URL: <input type="url" name="url" /></label>
+			<label>Title: <input type="text" name="title" /></label>
+			<input type="hidden" name="id" />
+			<input type="submit" value="Update"/>
+		</form>
+	</body>
+</html>

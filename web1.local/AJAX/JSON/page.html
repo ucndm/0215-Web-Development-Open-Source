@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>JSON</title>
+		<script type="text/javascript">
+			var responseElm;
+
+			var clienthandler = function(e){
+				if(e.target.readyState == 4){
+					var content = e.target.responseText;
+					var contentObj = JSON.parse(content);
+					responseElm.innerHTML = content;
+					console.debug(contentObj);
+				}
+			};
+
+			var loadPage = function(filename){
+				var xhr = new XMLHttpRequest();
+				xhr.addEventListener('readystatechange', clienthandler, false);
+				xhr.open('GET', filename);
+				xhr.send();
+			};
+
+			var clicklink = function(e){
+				e.preventDefault();
+				loadPage('jsonobj.php');
+			};
+
+			window.addEventListener('load', function(){
+				var link = document.querySelector('a');
+				link.addEventListener('click', clicklink, false);
+				responseElm = document.querySelector('#response');
+			}, false);
+		</script>
+	</head>
+	<body>
+		<p><a href="test">Get data</a></p>
+		<pre id="response"></pre>
+	</body>
+</html>
