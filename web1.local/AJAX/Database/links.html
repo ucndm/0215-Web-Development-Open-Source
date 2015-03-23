@@ -55,7 +55,9 @@
 				if(xhr.readyState == 4 && xhr.status == 200){
 					var xhrObj = JSON.parse(xhr.response);
 					var link = xhrObj.link;
+					//insert new li element into the list
 					linkObjToLinksElm(link);
+					//insert object into tha array
 					linksArr.push(link);
 				}
 			};

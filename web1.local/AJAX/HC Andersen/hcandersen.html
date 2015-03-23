@@ -31,7 +31,8 @@
 
 			var clicklink = function(e){
 				e.preventDefault();
-				var filename = e.originalTarget.attributes['href'].value;
+				console.debug(e);
+				var filename = e.target.attributes['href'].value;
 				loadPage(filename);
 			};
 
