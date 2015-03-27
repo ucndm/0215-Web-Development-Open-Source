@@ -36,10 +36,35 @@
 				background-color: DeepSkyBlue;
 			}
 
+			ul#notelist input {
+				display: inline-block;
+				width: 100%;
+				text-align: center;
+				background-color: LightBlue;
+				border: 1px solid black;
+				margin: 0;
+			}
+
 			div#note {
 				flex-grow: 1;
 				border: DeepSkyBlue solid .3em;
+				background-color: WhiteSmoke;
+				padding: .2em;
 			}
+
+			div#note input {
+				width: 100%;
+				box-sizing: border-box;
+				border: 1px solid black;
+			}
+
+			div#note textarea {
+				width: 100%;
+				height: 10em;
+				box-sizing: border-box;
+				border: 1px solid black;
+			}
+
 		</style>
 		<script type="text/javascript">
 			var request = function(id){
@@ -61,8 +86,14 @@
 	<body>
 		<div id="main">
 			<ul id="notelist">
-				<li><a class="current" data-id="1" href="noteapp.php?id=1">Node 1</a></li>
-				<li><a data-id="2" href="noteapp.php?id=2">Node 2</a></li>
+				<li><a class="current" data-id="1" href="noteapp.php?id=1">Note 1</a></li>
+				<li><a data-id="2" href="noteapp.php?id=2">Note 2</a></li>
+				<li>
+					<!--a POST request with NO title, id and content creates a new note with the title "new note" and the content "content goes here..."-->
+					<form name="newnote" method="post" action="noteapp.php">
+						<input type="submit" value="New note" />
+					</form>
+				</li>
 			</ul>
 			<div id="note">
 				<!--only display form if id is in querystring ($_GET['id'])-->
@@ -74,10 +105,5 @@
 				</form>
 			</div>
 		</div>
-		<form name="newnote" method="post" action="noteapp.php">
-			<input type="text" name="title"/><br />
-			<textarea name="content"></textarea><br />
-			<input type="submit" value="Create" />
-		</form>
 	</body>
 </html>
