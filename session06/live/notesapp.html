@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Notes app</title>
+		<meta charset="utf-8" />
+		<style type="text/css">
+			body {
+				margin: 0;
+			}
+
+			div#main {
+				display: flex;
+			}
+
+			ul#notelist {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				flex-grow: 1;
+			}
+
+			ul#notelist a {
+				display: inline-block;
+				width: 100%;
+				text-align: center;
+				text-decoration: none;
+				color: black;
+				background-color: LightBlue;
+			}
+
+			ul#notelist a.current {
+				background-color: DeepSkyBlue;
+			}
+
+			ul#notelist a:hover {
+				background-color: DeepSkyBlue;
+			}
+
+			div#note {
+				flex-grow: 1;
+				border: DeepSkyBlue solid .3em;
+			}
+		</style>
+		<script type="text/javascript">
+			var request = function(id){
+				// do xmlhttpreqest with the current id for this note 
+
+			};
+			windows.addEventListener('load', function(){
+				var links = document.querySelectorAll('ul#nodelist a');
+				links.forEach(function(link){
+					link.addEventListener('click', function(e){
+						e.preventDefault();
+						var id = e.target.attributes['data-id'];
+						request(id);
+					}, false);
+				});
+			};, false);
+		</script>
+	</head>
+	<body>
+		<div id="main">
+			<ul id="notelist">
+				<li><a class="current" data-id="1" href="noteapp.php?id=1">Node 1</a></li>
+				<li><a data-id="2" href="noteapp.php?id=2">Node 2</a></li>
+			</ul>
+			<div id="note">
+				<!--only display form if id is in querystring ($_GET['id'])-->
+				<form name="editnote" method="post" action="noteapp.php">
+					<input type="text" name="title"/><br />
+					<textarea name="content"></textarea><br />
+					<input type="hidden" name="id"/>
+					<input type="submit" value="Save" />
+				</form>
+			</div>
+		</div>
+		<form name="newnote" method="post" action="noteapp.php">
+			<input type="text" name="title"/><br />
+			<textarea name="content"></textarea><br />
+			<input type="submit" value="Create" />
+		</form>
+	</body>
+</html>
