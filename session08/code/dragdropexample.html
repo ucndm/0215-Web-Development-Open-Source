@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Basic Page</title>
+		<style type="text/css">
+			body {
+				font-family: Verdana, Helvetica, sans-serif;
+			}
+			
+			#dropbox {
+				min-height: 1em;
+				border: solid 1px black;
+			}
+		</style>
+		<script type="text/javascript"> 
+			var dragItems;
+			var dropZone;
+			var dragSrcItem = null;
+			var card = {items: []};
+			
+			function load(){
+				dropZone = document.getElementById('dropbox');
+				if(localStorage['card']){
+					card = JSON.parse(localStorage['card']);
+					for(var i = 0; i<card.items.length; i++){
+						dropZone.innerHTML += card.items[i];
+					}
+				}
+				dragItems = document.getElementsByClassName('dragItem');
+				for(var i = 0; i<dragItems.length; i++){
+					var dragItem = dragItems[i];
+					dragItem.addEventListener('dragstart', dragStart, false);
+				}
+				
+				dropZone.addEventListener('dragover', dragover, false);
+				dropZone.addEventListener('drop', drop, false);
+				
+				
+			}
+			
+			function dragStart(e){
+				dragSrcItem = this;
+				console.debug(e);
+				e.dataTransfer.effectAllowed = "move";
+				e.dataTransfer.setData('text/html', this.innerHTML);
+			}
+			
+			function dragover(e){
+				e.preventDefault();
+				e.dataTransfer.dropEffect = "move";
+				return false;
+			}
+			
+			function drop(e){
+				e.stopPropagation();
+				dropZone.innerHTML += dragSrcItem.outerHTML;
+				card.items.push(dragSrcItem.outerHTML);
+				localStorage.setItem('card', JSON.stringify(card));
+				//dragSrcItem.outerHTML = "";
+			}
+			
+			window.addEventListener('load', load, false);
+		</script>
+	</head>
+	<body>
+		<header>
+			<h1>Drag drop</h1>
+		</header>
+		<ul>
+			<li class="dragItem" draggable="true">Item 1</li>
+			<li class="dragItem" draggable="true">Item 2</li>
+			<li class="dragItem" draggable="true">Item 3</li>
+		</ul>
+		<ul id="dropbox"></ul>
+	</body>
+</html>

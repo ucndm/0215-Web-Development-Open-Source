@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Forms</title>
+		<style>
+			input {
+				display:block;
+			}
+		</style>
+	</head>
+	<body>
+		<form action="" method="post"> 
+			<label for="name">Name:</label> 
+			<input type="text" name="name" required="" placeholder="Name" />
+			<label for="email">Email:</label> 
+			<input type="email" name="email" required="" placeholder="email@example.com" />
+			<label for="website">Website:</label> 
+			<input type="url" list="url_list" name="website" required="" placeholder="http://www.example.com" />
+			<datalist id="url_list">
+				<option label="W3Schools" value="http://www.w3schools.com" />
+				<option label="Google" value="http://www.google.com" />
+				<option label="Microsoft" value="http://www.microsoft.com" />
+			</datalist>
+
+			<label for="number">Number:</label> 
+			<input type="number" name="number" min="0" max="10" step="2" required="" placeholder="Even num < 10">
+			<label for="range">Range:</label> 
+			<input type="range" name="range" min="0" max="10" step="2" />
+			<label for="message">Message:</label> 
+			<textarea name="message" required=""></textarea>
+			<input type="submit" />
+		</form>
+	</body>
+</html>

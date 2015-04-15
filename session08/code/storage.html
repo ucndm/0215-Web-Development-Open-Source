@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Storage</title>
+		<style>
+		</style>
+		<script>
+			function getStorage(type) {
+				if (!window[type + 'Storage']) return;
+				
+				var storage = window[type + 'Storage'];
+				var delta = 0;
+				var li = document.createElement('li');
+
+				if (storage.getItem('value')){
+					delta = ((new Date()).getTime() - (new Date()).setTime(storage.getItem('timestamp'))) / 1000;
+					li.innerHTML = type + 'Storage: ' + storage.getItem('value') + ' (last updated: ' + delta + 's ago)';
+				}else{
+					li.innerHTML = type + 'Storage is empty';
+				}
+				document.querySelector('#previous').appendChild(li);
+			}
+
+			
+			var load = function(){
+				//getStorage('session');
+				getStorage('local');
+				
+				document.querySelector('#session').addEventListener('keyup', function () {
+					sessionStorage.setItem('value', this.value);
+					sessionStorage.setItem('timestamp', (new Date()).getTime());
+				}, false);
+			
+				document.querySelector('#local').addEventListener('keyup', function () {
+					localStorage.setItem('value', this.value);
+					var object = {"item":"test"};
+					localStorage.setItem('object', JSON.stringify(object));
+					localStorage.setItem('timestamp', (new Date()).getTime());
+				}, false);
+			
+				document.querySelector('#clear').addEventListener('click', function () {
+					sessionStorage.clear();
+					localStorage.clear();
+					document.querySelector('#previous').innerHTML = '';
+					getStorage('local');
+					getStorage('session');
+				}, false);
+			};
+			
+			window.addEventListener('load', load, false);
+		</script>
+
+	</head>
+	<body>
+		<section>
+			<header>
+				<h1>Storage</h1>
+			</header>
+			<article>
+				<section>
+					<p>Content loaded from previous sessions:</p>
+					<ul id="previous"></ul>
+				</section>
+				<section>
+					<div>
+						<label for="session">sessionStorage:</label>
+						<input type="text" name="session" value="" id="session" />          
+					</div>
+					<div>
+						<label for="local">localStorage:</label>
+						<input type="text" name="local" value="" id="local" />
+					</div>
+					<input type="button" id="clear" value="Clear storage" />
+				</section>
+			</article>
+		</section>
+	</body>
+</html>
